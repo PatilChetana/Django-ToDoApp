@@ -1,0 +1,27 @@
+run the application using docker
+
+1) docker build -t chetana249/django-app:latest .   // build the image
+2) docker run -d -p 8000:8000 chetana249/django-app:latest // create container, it will run the app
+3) browse url : http://0.0.0.0:8000  or http://IPofhost:8000
+
+
+run app using kubernetes, on minikube
+1) minikube start
+2) minikube status
+3) docker push chetana249/django-app:latest     // push image to dockerhub as k8 first pull from dockerhub
+
+4) kubectl run todo-pod --image=chetana249/django-app:latest  // create pod
+5) kubectl get pods
+6) kubectl logs pod todo-pod
+
+
+7) using deployment.yaml file and service.yaml file
+8) kubectl apply -f deployment.yaml  
+9) kubectl get deployments, pods
+10) kubectl apply -f service.yaml
+11) kubectl get svc
+12) minikube ip
+13) curl -L ip:30009 or
+14) minikube service servicename --url
+15) curl url or browse url
+	
