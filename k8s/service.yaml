@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: tododjango-service
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: todo-django-app
   ports:
@@ -11,7 +11,8 @@ spec:
     - port: 80
       targetPort: 8000
       protocol: TCP
-      nodePort: 31000
+      name: http
+      #nodePort: 31000
     
       
       # Optional field
