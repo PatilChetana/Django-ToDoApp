@@ -1,0 +1,50 @@
+pipeline {
+    agent any
+     
+    environment{
+        registry = "public.ecr.aws/q4o3m7g1/todo-djangoapp"
+    }
+
+    stages {
+    
+        stage('Checkout Git and Build/Run manage.py') {
+            steps {
+                sh 'python3 --version'
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/PatilChetana/Django-ToDoApp.git']])
+                //sh 'python3 manage.py migrate'   Not needed as in Dockerfile we have written all the steps
+            }
+        }
+        
+        
+        stage('Build Image'){
+            steps{
+                script{
+                    docker.build registry
+                }
+            }
+        }
+        
+        stage('Push into ECR'){
+            steps{
+                sh 'aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/q4o3m7g1'
+                sh 'docker push public.ecr.aws/q4o3m7g1/todo-djangoapp'
+            }
+        }
+        
+        stage('K8s Deploy : EKS'){
+            steps{
+                script{
+                    withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'AWS_EKS-ubuntu-secret', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+                        sh 'kubectl get nodes'
+                        sh 'kubectl apply -f k8s/deployment.yaml'
+                        sh 'kubectl apply -f k8s/service.yaml'
+                    }
+                }
+            }
+        }
+        
+        
+        
+        
+    }
+}
