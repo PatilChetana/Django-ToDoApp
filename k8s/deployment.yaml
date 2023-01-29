@@ -34,7 +34,7 @@ spec:
 
       - name: todo-django-app
 
-        image: chetana249/todoapp:latest
+        image: public.ecr.aws/q4o3m7g1/todo-djangoapp:latest
 
         ports:
 
