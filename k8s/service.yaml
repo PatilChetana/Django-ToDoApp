@@ -8,8 +8,11 @@ spec:
     app: todo-django-app
   ports:
       # By default and for convenience, the `targetPort` is set to the same value as the `port` field.
-    - port: 80
-      targetPort: 8000
+    - port: 8006
+      targetPort: 8005
+      protocol: TCP
+    
+      
       # Optional field
       # By default and for convenience, the Kubernetes control plane will allocate a port from a range (default: 30000-32767)
      
