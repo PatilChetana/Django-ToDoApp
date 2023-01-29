@@ -8,8 +8,8 @@ spec:
     app: todo-django-app
   ports:
       # By default and for convenience, the `targetPort` is set to the same value as the `port` field.
-    - port: 8006
-      targetPort: 8005
+    - port: 80
+      targetPort: 8000
       protocol: TCP
     
       
