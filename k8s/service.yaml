@@ -5,7 +5,7 @@ metadata:
 spec:
   type: NodePort
   selector:
-    app: tododjango-app
+    app: todo-django-app
   ports:
       # By default and for convenience, the `targetPort` is set to the same value as the `port` field.
     - port: 80
