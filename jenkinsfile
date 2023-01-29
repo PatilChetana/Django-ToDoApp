@@ -1,0 +1,58 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout Git and Build/Run manage.py') {
+            steps {
+                sh 'python3 --version'
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/PatilChetana/Django-ToDoApp.git']])
+                //sh 'python3 manage.py migrate'   Not needed as in Dockerfile we have written all the steps
+            }
+        }
+        
+         stage('Build Docker Image') {
+            steps {
+               script{
+                   sh 'docker build -t chetana249/todoapp:latest .'
+               }
+            }
+        }
+        
+        stage('Push to Docker Hub'){
+            steps{
+                script{
+                 
+                    withCredentials([string(credentialsId: 'docker-hub-pass', variable: 'dockerhubpass')]) {
+                    
+                        sh 'docker login -u chetana249 -p ${dockerhubpass}'
+                    
+                    }
+                    
+                    sh 'docker push chetana249/todoapp:latest'
+                }
+                
+            }
+        }
+        
+       
+        
+         stage ('Deploy Application to K8s'){
+            steps{
+               // git credentialsId: 'docker-hub', url: 'https://github.com/PatilChetana/spring-boot-docker.git' 
+               withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'K8s-ubuntu', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+                  //  sh 'kubectl get nodes'
+                    
+                    sh 'kubectl apply -f k8s/deployment.yaml'
+                    sh 'kubectl apply -f k8s/service.yaml'
+               }
+          }
+        }
+        
+        
+        
+        
+        
+        
+        
+    }
+}
