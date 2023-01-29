@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: tododjango-service
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: todo-django-app
   ports:
@@ -12,4 +12,5 @@ spec:
       targetPort: 8000
       # Optional field
       # By default and for convenience, the Kubernetes control plane will allocate a port from a range (default: 30000-32767)
-      nodePort: 30007
+     
+
